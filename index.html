@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="./icons/icon-180.png" />
     <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./core.js" defer></script>
     <script src="./app.js" defer></script>
   </head>
   <body>
@@ -22,29 +23,33 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2" /></svg>
         </button>
         <p class="date" id="todayDate"></p>
-        <button class="icon-button" id="settingsButton" type="button" aria-label="设置">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.1A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.1A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.13.4.36.74.68 1 .3.26.7.4 1.1.4h.1v4h-.1a1.7 1.7 0 0 0-1.78.6Z" /></svg>
-        </button>
+        <div class="top-actions">
+          <button class="icon-button" id="statisticsButton" type="button" aria-label="月度统计">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg>
+          </button>
+          <button class="icon-button" id="settingsButton" type="button" aria-label="设置">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.1A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.1A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.13.4.36.74.68 1 .3.26.7.4 1.1.4h.1v4h-.1a1.7 1.7 0 0 0-1.78.6Z" /></svg>
+          </button>
+        </div>
       </header>
 
       <main>
         <section class="balance-card" aria-labelledby="balanceLabel">
           <p class="eyebrow" id="balanceLabel">今日剩余</p>
           <p class="balance" id="remainingAmount">¥0.00</p>
+          <p class="carry-note" id="carryNote"></p>
           <div class="summary-row">
-            <div><span>今日额度</span><strong id="dailyLimit">¥0</strong></div>
-            <div><span>今日已消费</span><strong id="todaySpent">¥0</strong></div>
+            <div><span>今日可用</span><strong id="availableAmount">¥0</strong></div>
+            <div><span>今日已花</span><strong id="todaySpent">¥0</strong></div>
           </div>
         </section>
 
         <button class="primary-button" id="addButton" type="button">记录消费</button>
 
         <section class="records-section" aria-labelledby="recordsTitle">
-          <div class="section-heading">
-            <h1 id="recordsTitle">今天记录</h1>
-            <span id="recordCount"></span>
-          </div>
+          <div class="section-heading"><h1 id="recordsTitle">今天</h1><span id="recordCount"></span></div>
           <div class="record-list" id="todayRecords"></div>
+          <button class="undo-button" id="undoButton" type="button" hidden>撤销上一笔</button>
         </section>
       </main>
     </div>
@@ -53,14 +58,11 @@
       <form method="dialog" id="expenseForm">
         <div class="sheet-handle" aria-hidden="true"></div>
         <div class="sheet-header">
-          <button class="text-button" value="cancel" type="button" data-close="expenseDialog">取消</button>
-          <h2>记录消费</h2>
-          <button class="text-button strong" id="confirmExpense" type="submit">确认</button>
+          <button class="text-button" type="button" data-close="expenseDialog">取消</button>
+          <h2 id="expenseDialogTitle">记录消费</h2>
+          <button class="text-button strong" type="submit">确认</button>
         </div>
-        <label class="amount-input-wrap">
-          <span>¥</span>
-          <input id="expenseAmount" name="amount" inputmode="decimal" autocomplete="off" enterkeyhint="done" placeholder="0" aria-label="消费金额" />
-        </label>
+        <label class="amount-input-wrap"><span>¥</span><input id="expenseAmount" inputmode="decimal" autocomplete="off" enterkeyhint="done" placeholder="0" aria-label="消费金额" /></label>
         <p class="form-error" id="expenseError" role="alert"></p>
       </form>
     </dialog>
@@ -68,35 +70,61 @@
     <dialog class="page-dialog" id="settingsDialog">
       <form method="dialog" id="settingsForm" class="dialog-page">
         <div class="page-header">
-          <button class="text-button" value="cancel" type="button" data-close="settingsDialog">取消</button>
-          <h2>设置</h2>
-          <button class="text-button strong" type="submit">保存</button>
+          <button class="text-button" type="button" data-close="settingsDialog">取消</button><h2>设置</h2><button class="text-button strong" type="submit">保存</button>
         </div>
-        <div class="form-card">
-          <label for="limitAmount">每日额度</label>
-          <div class="setting-input"><span>¥</span><input id="limitAmount" inputmode="decimal" autocomplete="off" /></div>
-        </div>
+        <h3 class="form-section-title">额度</h3>
+        <div class="form-card single-row"><label for="limitAmount">每日基础额度</label><div class="setting-input"><span>¥</span><input id="limitAmount" inputmode="decimal" autocomplete="off" /></div></div>
         <p class="form-error inset" id="settingsError" role="alert"></p>
-        <p class="form-note">修改后立即用于今天和之后的日期，不会影响已有消费记录。</p>
+
+        <h3 class="form-section-title">结转</h3>
+        <div class="form-card settings-list">
+          <label class="switch-row"><span><strong>结余结转</strong><small>未使用额度加入下一天</small></span><input id="carryPositive" type="checkbox" role="switch" /></label>
+          <label class="switch-row"><span><strong>超支结转</strong><small>超支金额从下一天扣除</small></span><input id="carryNegative" type="checkbox" role="switch" /></label>
+        </div>
+
+        <h3 class="form-section-title">外观</h3>
+        <div class="segmented" role="radiogroup" aria-label="外观">
+          <label><input type="radio" name="appearance" value="system" /><span>跟随系统</span></label>
+          <label><input type="radio" name="appearance" value="light" /><span>浅色</span></label>
+          <label><input type="radio" name="appearance" value="dark" /><span>深色</span></label>
+        </div>
+
+        <h3 class="form-section-title">数据</h3>
+        <div class="form-card settings-list action-list">
+          <button id="exportButton" type="button">导出备份<span>›</span></button>
+          <button id="importButton" type="button">恢复备份<span>›</span></button>
+          <input id="importFile" type="file" accept="application/json,.json" hidden />
+        </div>
+        <p class="form-note">导出后可在系统分享菜单中选择“存储到文件”，保存至 iCloud Drive。</p>
       </form>
     </dialog>
 
     <dialog class="page-dialog" id="historyDialog">
       <section class="dialog-page">
-        <div class="page-header">
-          <button class="text-button" type="button" data-close="historyDialog">完成</button>
-          <h2>历史记录</h2>
-          <span class="header-spacer"></span>
-        </div>
+        <div class="page-header"><button class="text-button" type="button" data-close="historyDialog">完成</button><h2>历史记录</h2><span class="header-spacer"></span></div>
         <div class="history-list" id="historyRecords"></div>
       </section>
     </dialog>
 
-    <template id="emptyTemplate">
-      <div class="empty-state">
-        <div class="empty-icon">¥</div>
-        <p>今天还没有消费</p>
-      </div>
-    </template>
+    <dialog class="page-dialog" id="dayDialog">
+      <section class="dialog-page">
+        <div class="page-header"><button class="text-button" type="button" data-close="dayDialog">返回</button><h2 id="dayDialogTitle">当天记录</h2><span class="header-spacer"></span></div>
+        <div class="day-summary" id="daySummary"></div>
+        <div class="record-list editable-list" id="dayRecords"></div>
+      </section>
+    </dialog>
+
+    <dialog class="page-dialog" id="statisticsDialog">
+      <section class="dialog-page">
+        <div class="page-header"><button class="text-button" type="button" data-close="statisticsDialog">完成</button><h2>月度统计</h2><span class="header-spacer"></span></div>
+        <div class="month-picker"><button id="previousMonth" type="button" aria-label="上个月">‹</button><strong id="statisticsMonth"></strong><button id="nextMonth" type="button" aria-label="下个月">›</button></div>
+        <div class="stats-card" id="statisticsSummary"></div>
+        <h3 class="form-section-title">每日消费</h3>
+        <div class="trend-list" id="dailyTrend"></div>
+      </section>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <template id="emptyTemplate"><div class="empty-state"><div class="empty-icon">¥</div><p>今天还没有消费</p></div></template>
   </body>
 </html>

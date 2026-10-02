@@ -1,8 +1,9 @@
-const CACHE_NAME = "daily-allowance-v1";
+const CACHE_NAME = "daily-allowance-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
+  "./core.js",
   "./app.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",

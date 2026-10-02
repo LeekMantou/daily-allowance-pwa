@@ -1,7 +1,7 @@
 {
   "name": "每日额度",
   "short_name": "每日额度",
-  "description": "每天只关注一个消费额度",
+  "description": "每日可花额度、结余与超支结转",
   "lang": "zh-CN",
   "start_url": "./",
   "scope": "./",
